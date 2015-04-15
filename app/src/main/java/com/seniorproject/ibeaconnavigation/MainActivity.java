@@ -2,10 +2,13 @@ package com.seniorproject.ibeaconnavigation;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TabHost;
 
 /**
@@ -43,6 +46,15 @@ public class MainActivity extends ActionBarActivity {
         tabSpec.setContent(R.id.tabRecent);
         tabSpec.setIndicator("Recent");
         tabHost.addTab(tabSpec);
+
+        Button mapButton = (Button)findViewById(R.id.buttonMap);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(mapIntent);
+            }
+        });
     }
 
     @Override
