@@ -1,14 +1,11 @@
 package com.seniorproject.ibeaconnavigation;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -29,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
 
         setupTabHost();
         populateSearchList();
+        populateFavoritesList();
     }
 
     /**
@@ -47,8 +45,20 @@ public class MainActivity extends ActionBarActivity {
         };
         // Filling an ArrayList to allow new additions to ArrayAdapter
         ArrayList buildingsList = new ArrayList(Arrays.asList(buildings));
-        ArrayAdapter listAdapter = new ArrayAdapter(this, R.layout.simplerow, buildingsList);
+        BuildingListAdapter listAdapter = new BuildingListAdapter(this, buildingsList);
         buildingListView.setAdapter(listAdapter);
+    }
+
+    private void populateFavoritesList() {
+        ListView favoritesListView = (ListView)findViewById(R.id.listFavorites);
+        // Dummy data for rooms
+        String[] buildings = {
+                "14-201 (Frank E. Pilling)"
+        };
+        // Filling an ArrayList to allow new additions to ArrayAdapter
+        ArrayList buildingsList = new ArrayList(Arrays.asList(buildings));
+        RoomListAdapter listAdapter = new RoomListAdapter(this, buildingsList);
+        favoritesListView.setAdapter(listAdapter);
     }
 
     /**
