@@ -1,6 +1,8 @@
 package com.seniorproject.ibeaconnavigation;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +60,14 @@ public class RoomListAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Selected room " + (String)room,
                                Toast.LENGTH_SHORT).show();
-                // TODO: launch fragment that routes user to the room
+                // TODO: launch Google Maps nav to building, then swap in our room navigation
+                // For now only navigating by foot (w) to Frank E. Pilling CSC building
+                String queryDestination = "Frank+E.+Pilling,+San+Luis+Obispo,+CA";
+                String queryMode = "&mode=w";
+                Uri gmapBuildingUri = Uri.parse("google.navigation:q=" + queryDestination + queryMode);
+//                Intent mapIntent = new Intent(getContext(), MapActivity.class);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapBuildingUri);
+                getContext().startActivity(mapIntent);
             }
         });
 

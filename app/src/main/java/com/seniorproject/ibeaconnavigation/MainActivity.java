@@ -82,15 +82,6 @@ public class MainActivity extends ActionBarActivity {
         tabSpec.setContent(R.id.tabRecent);
         tabSpec.setIndicator("Recent");
         tabHost.addTab(tabSpec);
-
-        Button mapButton = (Button)findViewById(R.id.buttonMap);
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
-                startActivity(mapIntent);
-            }
-        });
     }
 
     @Override
