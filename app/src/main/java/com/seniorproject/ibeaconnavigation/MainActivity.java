@@ -8,8 +8,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TabHost;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * MainActivity provides the tab navigation for the application.
@@ -23,6 +28,27 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         setupTabHost();
+        populateSearchList();
+    }
+
+    /**
+     * Populate the Search page's list with mock building data
+     */
+    private void populateSearchList() {
+        ListView buildingListView = (ListView)findViewById(R.id.listBuilding);
+        // Dummy data for buildings
+        String[] buildings = {
+                "1 Administration",
+                "2 Cochett Education",
+                "3 Business",
+                "4 Research Development",
+                "5 Architecture & Environmental",
+                "14 Frank E. Pilling Computer Science"
+        };
+        // Filling an ArrayList to allow new additions to ArrayAdapter
+        ArrayList buildingsList = new ArrayList(Arrays.asList(buildings));
+        ArrayAdapter listAdapter = new ArrayAdapter(this, R.layout.simplerow, buildingsList);
+        buildingListView.setAdapter(listAdapter);
     }
 
     /**
