@@ -42,6 +42,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.seniorproject.ibeaconnavigation.MainActivity" />
         </activity>
+        <activity
+            android:name=".RangingActivity"
+            android:label="@string/title_activity_ranging" >
+        </activity>
     </application>
 
 </manifest>

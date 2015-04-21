@@ -24,6 +24,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button rangingBtn = (Button) findViewById(R.id.rangingButton);
+        rangingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RangingActivity.class);
+                startActivity(intent);
+            }
+        });
+
         setupTabHost();
         populateSearchList();
         populateFavoritesList();
