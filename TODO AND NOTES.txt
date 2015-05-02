@@ -1,0 +1,30 @@
+--------------
+--- Calvin ---
+* Create custom Google Maps Activity "MapActivity" to be launched from MainActivity
+
+* Retrieve user location in MapActivity
+~ Was achieved through the creation of and connection to a Google API Client, but left unused
+until we really deem it necessary.
+
+* Show route to Frank E. Pilling CSC building from user location (w/ option to start nav)
+~ found out that real-time nav or waypoint pulling w/o passing it off to GMaps app is not allowed
+~ See 10.2 (d) of https://developers.google.com/maps/terms
+~ Went from launching navigation app from an intent parsing a URI, to a custom MapActivity w/ MapFragment, 
+to a webView for just directions, back to custom MapActivity b/c realized there were buttons after tapping
+on the marker (so need to indicate to user that they must manually trigger the directions/nav, then return)
+
+* Detect when destination building reached (through nav if applicable, else check for building's iBeacons)
+
+* finish() MapActivity when building reached, and switch MapFragment with IndoorMapFragment for
+  indoor room navigation logic
+
+* Research Android permissions for app use outside of debug mode?
+http://developer.android.com/guide/topics/security/permissions.html
+
+* Look into using a GoogleMaps.Overlay class instead of floorplan?
+
+
+
+----------------
+--- Sterling ---
+* Detect multiple nearby beacons and display them in a list, sorted by and showing distances to beacons

@@ -62,11 +62,14 @@ public class RoomListAdapter extends ArrayAdapter {
                                Toast.LENGTH_SHORT).show();
                 // TODO: launch Google Maps nav to building, then swap in our room navigation
                 // For now only navigating by foot (w) to Frank E. Pilling CSC building
-                String queryDestination = "Frank+E.+Pilling,+San+Luis+Obispo,+CA";
-                String queryMode = "&mode=w";
-                Uri gmapBuildingUri = Uri.parse("google.navigation:q=" + queryDestination + queryMode);
-//                Intent mapIntent = new Intent(getContext(), MapActivity.class);
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapBuildingUri);
+//                String queryDestination = "Frank+E.+Pilling,+San+Luis+Obispo,+CA";
+//                String queryMode = "&mode=w";
+//                Uri gmapBuildingUri = Uri.parse("google.navigation:q=" + queryDestination + queryMode);
+//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapBuildingUri);
+//                getContext().startActivity(mapIntent);
+
+                // Start custom MapActivity
+                Intent mapIntent = new Intent(getContext(), MapActivity.class);
                 getContext().startActivity(mapIntent);
             }
         });
