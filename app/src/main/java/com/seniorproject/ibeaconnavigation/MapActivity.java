@@ -6,11 +6,19 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class MapActivity extends Activity implements OnMapReadyCallback {
 //, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
@@ -31,6 +39,25 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);       // Tell MapFragment to retrieve map
 
+        Button navButton = (Button)findViewById(R.id.map_navButton);
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Simulate launching floorplan navigation logic when close to building
+                Intent bpService = new Intent(MapActivity.this, BuildingProximityService.class);
+                MapActivity.this.startService(bpService);
+
+                // Build Google Nav URI and launch Google MapsActivity with it
+                String queryDestination = "Frank+E.+Pilling,+San+Luis+Obispo,+CA";
+                String queryMode = "&mode=w";
+                Uri gmapBuildingUri = Uri.parse("google.navigation:q=" + queryDestination + queryMode);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapBuildingUri);
+                mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                mapIntent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                MapActivity.this.startActivity(mapIntent);
+            }
+        });
+
 //        // FIXME: Unused b/c may use beacon detection vs. location checking to trigger indoor nav
 //        // Build & connect to Google API Client to ask for last known location
 //        buildGoogleApiClient();
@@ -41,7 +68,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
 //        mWebView.getSettings().setJavaScriptEnabled(true);
     }
 
-//    // FIXME: Unused b/c may use beacon detection vs. location checking to trigger indoor nav
+    //    // FIXME: Unused b/c may use beacon detection vs. location checking to trigger indoor nav
 //    @Override
 //    public void finish() {
 //        mGoogleApiClient.disconnect();
@@ -93,7 +120,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
 
         map.addMarker(new MarkerOptions()
                 .title("Frank E. Pilling Computer Science")
-                .snippet("A center of hands-on creation and analysis.")
+                .snippet("A hub of hands-on computational creativity and analysis.")
                 .position(targetCoord));
     }
 }
