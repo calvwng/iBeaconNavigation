@@ -10,12 +10,17 @@
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="483dp"
         class="com.google.android.gms.maps.MapFragment" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Navigate to Building"
+        android:id="@+id/map_navButton" />
 
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map_webView"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/map_webView" />
 </LinearLayout>
