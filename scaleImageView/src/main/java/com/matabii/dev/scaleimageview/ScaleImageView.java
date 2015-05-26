@@ -2,10 +2,14 @@ package com.matabii.dev.scaleimageview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +40,9 @@ public class ScaleImageView extends ImageView implements OnTouchListener {
     private int mPrevMoveY;
     private GestureDetector mDetector;
 
+    //Custom variables
+    private int mBeacon;
+
     String TAG = "ScaleImageView";
 
     public ScaleImageView(Context context, AttributeSet attr) {
@@ -48,6 +55,25 @@ public class ScaleImageView extends ImageView implements OnTouchListener {
         super(context);
         this.mContext = context;
         initialize();
+    }
+
+    //Custom Code
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if (mBeacon > 0) {
+            Paint paint = new Paint();
+            paint.setStrokeWidth(10);
+            paint.setColor(Color.BLUE);
+            //int width = (int) (mIntrinsicWidth * getScale());
+            canvas.drawCircle(500, 500 * mBeacon, 100 * getScale(), paint);
+        }
+    }
+
+    //Custom Code
+    public void setBeacon(int num) {
+        mBeacon = num;
     }
 
     @Override
@@ -63,6 +89,7 @@ public class ScaleImageView extends ImageView implements OnTouchListener {
     }
 
     private void initialize() {
+        mBeacon = 0;
         this.setScaleType(ScaleType.MATRIX);
         this.mMatrix = new Matrix();
         Drawable d = getDrawable();
