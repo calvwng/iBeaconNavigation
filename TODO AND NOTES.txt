@@ -1,37 +1,11 @@
 --------------
 --- Calvin ---
-* Create custom Google Maps Activity "MapActivity" to be launched from MainActivity
-
-* Retrieve user location in MapActivity
-~ Was achieved through the creation of and connection to a Google API Client, but left unused
-until we really deem it necessary.
-
-* Show route to Frank E. Pilling CSC building from user location (w/ option to start nav)
-
-~ found out that real-time nav or waypoint pulling w/o passing it off to GMaps app is not allowed
-(See 10.2 (d) of https://developers.google.com/maps/terms)
-
-~ Went from launching navigation app from an intent parsing a URI, to a custom MapActivity w/ MapFragment, 
-to a webView for just directions, back to custom MapActivity b/c realized there were buttons after tapping
-on the marker (so need to indicate to user that they must manually trigger the directions/nav, then return)
-
-~ Maybe I should go back to the URI approach since that launches directly into navigation, and just launch
-a Service (in Activity's onPause() to check when I need to bring our indoor navigation logic to the foreground, 
-if possible; if not possible, then wait until user backs out of GMaps app, and perform switch in onResume())
-
-~ Another thought is to use an overlayed notification that interrupts the user in GMaps and gives them
-the option to go to our app's indoor navigation logic
-
-* Detect (or wait until MapActivity regains focus, manually) when destination building reached 
-~ through nav if applicable https://developer.android.com/training/location/receive-location-updates.html
-~ else check for building's iBeacons
-
-* once at destination building, switch MapFragment with IndoorMapFragment for indoor room navigation logic
-
-* Research Android permissions for app use outside of debug mode?
-http://developer.android.com/guide/topics/security/permissions.html
-
-* Look into using a GoogleMaps.Overlay class instead of floorplan?
+* Room Navigation Workflow to implement:
+  When target room is selected, check if corresponding beacon is detected.
+  If detected, launch only FloorplanNavigationActivity.
+  Else launch Google Nav routing to the building corresponding to the room's beacon
+     & start BuildingProximityService to poll for the room's beacon.
+       When room's beacon is detected, then launch FloorplanNavigationActivity.
 
 
 ----------------
