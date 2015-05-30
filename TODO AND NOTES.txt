@@ -7,6 +7,12 @@
      & start BuildingProximityService to poll for the room's beacon.
        When room's beacon is detected, then launch FloorplanNavigationActivity.
 
+* Implement Building Search => launching of Room Search
+
+* Implement Room Search => launching of Room Navigation Workflow
+
+* Implement Room favoriting
+
 
 ----------------
 --- Sterling ---
