@@ -1,13 +1,11 @@
 package com.seniorproject.ibeaconnavigation;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TabHost;
 
 import java.util.ArrayList;
@@ -18,40 +16,42 @@ import java.util.Arrays;
  * @author Calvin Wong
  */
 public class MainActivity extends ActionBarActivity {
+    private ListView buildingListView;
+    private ListView favoritesListView;
+    private SearchView searchView;
+
+    // Dummy data for buildings
+    private String[] buildings = {
+            "1 Administration",
+            "2 Cochett Education",
+            "3 Business",
+            "4 Research Development",
+            "5 Architecture & Environmental",
+            "14 Frank E. Pilling Computer Science"
+    };
+
+    // Dummy data for favorited rooms
+    private String[] favRooms = {
+            "14-201 (Frank E. Pilling)"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Button rangingBtn = (Button) findViewById(R.id.rangingButton);
-        rangingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RangingActivity.class);
-                startActivity(intent);
-            }
-        });
+        buildingListView = (ListView)findViewById(R.id.listBuilding);
+        searchView = (SearchView)findViewById(R.id.searchBuilding);
 
         setupTabHost();
         populateSearchList();
         populateFavoritesList();
+        setupSearchFiltering();
     }
 
     /**
      * Populate the Search page's list with mock building data
      */
     private void populateSearchList() {
-        ListView buildingListView = (ListView)findViewById(R.id.listBuilding);
-        // Dummy data for buildings
-        String[] buildings = {
-                "1 Administration",
-                "2 Cochett Education",
-                "3 Business",
-                "4 Research Development",
-                "5 Architecture & Environmental",
-                "14 Frank E. Pilling Computer Science"
-        };
         // Filling an ArrayList to allow new additions to ArrayAdapter
         ArrayList buildingsList = new ArrayList(Arrays.asList(buildings));
         BuildingListAdapter listAdapter = new BuildingListAdapter(this, buildingsList);
@@ -59,14 +59,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void populateFavoritesList() {
-        ListView favoritesListView = (ListView)findViewById(R.id.listFavorites);
-        // Dummy data for rooms
-        String[] buildings = {
-                "14-201 (Frank E. Pilling)"
-        };
+        favoritesListView = (ListView)findViewById(R.id.listFavorites);
         // Filling an ArrayList to allow new additions to ArrayAdapter
-        ArrayList buildingsList = new ArrayList(Arrays.asList(buildings));
-        RoomListAdapter listAdapter = new RoomListAdapter(this, buildingsList);
+        ArrayList favList = new ArrayList(Arrays.asList(favRooms));
+        RoomListAdapter listAdapter = new RoomListAdapter(this, favList);
         favoritesListView.setAdapter(listAdapter);
     }
 
@@ -91,6 +87,31 @@ public class MainActivity extends ActionBarActivity {
         tabSpec.setContent(R.id.tabRecent);
         tabSpec.setIndicator("Recent");
         tabHost.addTab(tabSpec);
+    }
+
+    private void setupSearchFiltering() {
+        // Handle building search by filtering list as user types
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ArrayList<String> temp = new ArrayList<String>();
+                int queryLen = newText.length();
+                for (int i = 0; i < buildings.length; i++) {
+                    if (queryLen <= buildings[i].length()
+                            && buildings[i].toLowerCase().contains(newText.toLowerCase())) {
+                        temp.add(buildings[i]);
+                    }
+                }
+                BuildingListAdapter listAdapter = new BuildingListAdapter(MainActivity.this, temp);
+                buildingListView.setAdapter(listAdapter);
+                return true; // true b/c action is handled by the listener, not default
+            }
+        });
     }
 
     @Override
