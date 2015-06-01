@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,60 +32,32 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
+ * Floorplan navigation for guiding the user to the target room.
+ *
  * Created by Calvin on 5/2/2015.
  */
-public class FloorplanNavigationActivity extends Activity implements BeaconConsumer {
-    private BeaconManager beaconManager;
+public class FloorplanNavigationActivity extends ActionBarActivity {
     private ScaleImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String targetRoomLabel = getIntent().getExtras().getString("TARGET_ROOM_LABEL");
+        setTitle("Room " + targetRoomLabel);
         setContentView(R.layout.activity_floorplan_nav);
         imageView = (ScaleImageView) findViewById(R.id.imageView);
-        beaconManager = BeaconManager.getInstanceForApplication(this);
-        beaconManager.bind(this);
-        // Supposedly this is the RadBeacon Layout
-        beaconManager
-                .getBeaconParsers()
-                .add(new BeaconParser()
-                        .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        beaconManager.unbind(this);
-    }
-    @Override
-    public void onBeaconServiceConnect() {
-        beaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
-            public void didRangeBeaconsInRegion(final Collection<Beacon> beacons, Region region) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (beacons.size() > 0) {
-                            String address = beacons.iterator().next().getBluetoothAddress();
-                            if (address.equals("00:07:80:15:89:E0")) {
-                                imageView.setBeacon(1);
-                            }
-                            else if (address.equals("00:07:80:15:73:34")) {
-                                imageView.setBeacon(2);
-                            }
-                        }
-                        else {
-                            imageView.setBeacon(0);
-                        }
-                        imageView.invalidate();
-                    }
-                });
-            }
-        });
-
-        try {
-            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-        } catch (RemoteException e) {    }
+        String beaconAddr = getIntent().getExtras().getString("BEACON_ADDRESS");
+        if (beaconAddr.equals("00:07:80:15:89:E0")) {
+            imageView.setBeacon(1);
+        }
+        else if (beaconAddr.equals("00:07:80:15:73:34")) {
+            imageView.setBeacon(2);
+        }
+        else {
+            imageView.setBeacon(1);
+        }
+        imageView.invalidate();
     }
 
     /*

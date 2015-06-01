@@ -10,11 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.seniorproject.ibeaconnavigation.model.Room;
+
 import java.util.List;
 
 /**
  * Custom ListAdapter for lists of rooms.
- * Created by Calvin on 4/19/2015.
+ *
+ *  Created by Calvin on 4/19/2015.
  */
 public class RoomListAdapter extends ArrayAdapter {
     protected Context mContext;
@@ -25,7 +28,7 @@ public class RoomListAdapter extends ArrayAdapter {
      * @param context
      * @param rooms
      */
-    public RoomListAdapter(Context context, List rooms) {
+    public RoomListAdapter(Context context, List<Room> rooms) {
         super(context, R.layout.simplerow, rooms);
         mContext = context;
         mRooms = rooms;
@@ -50,29 +53,22 @@ public class RoomListAdapter extends ArrayAdapter {
         }
 
         // Get corresponding room from list
-        final Object room = mRooms.get(position);
+        final Room room = (Room)mRooms.get(position);
 
         // Update corresponding room's Views
-        holder.name.setText((String)room);
+        holder.name.setText(room.toString());
         // Temporarily handles click events by displaying a Toast with room name
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Selected room " + (String)room,
+                Toast.makeText(getContext(), "Selected room " + room.toString(),
                                Toast.LENGTH_SHORT).show();
 
-                // TODO: launch Google Maps nav to building, then swap in our room navigation
-                // For now only navigating by foot (w) to Frank E. Pilling CSC building
-//                String queryDestination = "Frank+E.+Pilling,+San+Luis+Obispo,+CA";
-//                String queryMode = "&mode=w";
-//                Uri gmapBuildingUri = Uri.parse("google.navigation:q=" + queryDestination + queryMode);
-//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapBuildingUri);
-//                mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//                mapIntent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-//                getContext().startActivity(mapIntent);
-
+                // launch Google Nav to building, then jump to our floorplan nav when beacon found
                 // Start custom MapActivity
                 Intent mapIntent = new Intent(getContext(), MapActivity.class);
+                mapIntent.putExtra(Room.TAG_BEACON_ADDR, room.getBeaconAddr());
+                mapIntent.putExtra(Room.TAG_LABEL, room.toString());
                 getContext().startActivity(mapIntent);
             }
         });

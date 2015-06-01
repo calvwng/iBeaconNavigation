@@ -7,6 +7,8 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.seniorproject.ibeaconnavigation.model.Room;
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -17,11 +19,17 @@ import org.altbeacon.beacon.Region;
 import java.util.Collection;
 
 /**
+ * Background Service that polls for the target room's beacon, and launches the
+ * floorplan navigation once it is found.
+ *
  * Created by Calvin on 5/2/2015.
  */
 public class BuildingProximityService extends Service implements BeaconConsumer {
-    protected static final String TAG = "BuildingProximityService";
+    protected static final String TAG = "cwong";
     private BeaconManager beaconManager;
+    String beaconAddr; // Bluetooth address of the beacon corresponding to the target room
+    String targetRoomLabel;
+    boolean beaconFound = false; // So that beacon's handled once per detection, then service stops
 
 
     @Override
@@ -34,6 +42,21 @@ public class BuildingProximityService extends Service implements BeaconConsumer 
                 .getBeaconParsers()
                 .add(new BeaconParser()
                         .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
+        Log.d(TAG, "Started BuildingProximityService successfully.");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int result = super.onStartCommand(intent, flags, startId);
+        beaconAddr = intent.getStringExtra(Room.TAG_BEACON_ADDR);
+        targetRoomLabel = intent.getStringExtra(Room.TAG_LABEL);
+        return result;
     }
 
     @Override
@@ -48,32 +71,44 @@ public class BuildingProximityService extends Service implements BeaconConsumer 
             @Override
             public void didRangeBeaconsInRegion(final Collection<Beacon> beacons, Region region) {
                 if (beacons.size() > 0) {
-//                    for (Beacon beacon : beacons) {
-//                        Log.d("cwong", "The beacon " + beacon.getBluetoothAddress() +
-//                                " is about " + beacon.getDistance() + " meters away.");
-//                    }
-//                    Log.d("cwong", "Number of beacons: " + beacons.size());
 
-                    try {
-                        BeaconManager.getInstanceForApplication(getApplicationContext())
-                                .stopRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-                    }
-                    catch (RemoteException re) {
-                        Log.d("bpServ", "" + re);
-                    }
+                    for (Beacon beacon : beacons) {
+                        if (!beaconFound && beacon.getBluetoothAddress().equals(beaconAddr)) {
+                            beaconFound = true;
 
-                    // Finding the beacon triggers the floorplan navigation and stops this service
-                    Toast.makeText(BuildingProximityService.this, "Found the room beacon!", Toast.LENGTH_SHORT).show();
-                    Intent fpNavIntent = new Intent(getBaseContext(), FloorplanNavigationActivity.class);
-                    fpNavIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplication().startActivity(fpNavIntent);
-                    stopSelf();
+                            try {
+                                BeaconManager.getInstanceForApplication(getApplicationContext())
+                                        .stopRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+                            }
+                            catch (RemoteException re) {
+                                Log.d(TAG, "" + re);
+                            }
+
+                            // Finding the beacon triggers the floorplan navigation and stops this service
+//                            Toast.makeText(BuildingProximityService.this, "Found the room beacon!", Toast.LENGTH_SHORT).show();
+                            Intent fpNavIntent = new Intent(getBaseContext(), FloorplanNavigationActivity.class);
+                            fpNavIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            String beaconAddress = beacons.iterator().next().getBluetoothAddress();
+                            fpNavIntent.putExtra(Room.TAG_BEACON_ADDR, beaconAddress);
+                            fpNavIntent.putExtra(Room.TAG_LABEL, targetRoomLabel);
+                            getApplication().startActivity(fpNavIntent);
+                            stopSelf();
+                        }
+                    }
                 }
             }
         });
 
         try {
-            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-        } catch (RemoteException e) {    }
+            if (beaconFound) {
+                stopSelf();
+            }
+            else {
+                beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+            }
+        }
+        catch (RemoteException e) {
+            Log.d(TAG, "" + e);
+        }
     }
 }

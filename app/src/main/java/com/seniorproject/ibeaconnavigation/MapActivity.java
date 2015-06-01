@@ -2,19 +2,26 @@ package com.seniorproject.ibeaconnavigation;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
+import com.seniorproject.ibeaconnavigation.model.Room;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 
-public class MapActivity extends Activity implements OnMapReadyCallback {
+public class MapActivity extends ActionBarActivity implements OnMapReadyCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        final String beaconAddr = getIntent().getExtras().getString(Room.TAG_BEACON_ADDR);
+        final String roomLabel = getIntent().getExtras().getString(Room.TAG_LABEL);
+        setTitle("Room " + roomLabel);
 
         // Retrieve the Google MapFragment
         MapFragment mapFragment = (MapFragment) getFragmentManager()
@@ -27,6 +34,8 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
             public void onClick(View v) {
                 // Launch background service to detect iBeacon
                 Intent bpService = new Intent(MapActivity.this, BuildingProximityService.class);
+                bpService.putExtra(Room.TAG_BEACON_ADDR, beaconAddr);
+                bpService.putExtra(Room.TAG_LABEL, roomLabel);
                 MapActivity.this.startService(bpService);
 
                 // Build Google Nav URI and launch Google MapsActivity with it

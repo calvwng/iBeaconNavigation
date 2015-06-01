@@ -8,6 +8,9 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TabHost;
 
+import com.seniorproject.ibeaconnavigation.model.Building;
+import com.seniorproject.ibeaconnavigation.model.Room;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,8 +34,13 @@ public class MainActivity extends ActionBarActivity {
     };
 
     // Dummy data for favorited rooms
-    private String[] favRooms = {
-            "14-201 (Frank E. Pilling)"
+//    private String[] favRooms = {
+//            "14-201 (Frank E. Pilling)"
+//    };
+
+    // Dummy data for favorited rooms
+    private Room[] favRooms = {
+            Building.getBuilding(14).getRoom(201)
     };
 
     @Override
