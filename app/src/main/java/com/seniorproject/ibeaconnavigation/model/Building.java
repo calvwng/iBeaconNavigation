@@ -33,7 +33,7 @@ public class Building implements Serializable {
         put(5, new Building(5, "Architecture & Environmental", null));
         put(14, new Building(14, "Frank E. Pilling Computer Science",
                 new HashMap<Integer, Room>() {{
-                    put(201, new Room(201, 14, "00:07:80:15:89:2C"));
+                    put(201, new Room(201, 14, "00:07:80:15:89:E0"));
                     put(212, new Room(212, 14, "00:07:80:15:89:2C", "Dr. Janzen's Office"));
                     put(235, new Room(235, 14, "00:07:80:15:89:2C", "CSL Main"));
                 }}));

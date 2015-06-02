@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.FloatMath;
@@ -57,23 +58,8 @@ public class ScaleImageView extends ImageView implements OnTouchListener {
         initialize();
     }
 
-    //Custom Code
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        if (mBeacon > 0) {
-            Paint paint = new Paint();
-            paint.setStrokeWidth(10);
-            paint.setColor(Color.BLUE);
-            //int width = (int) (mIntrinsicWidth * getScale());
-            canvas.drawCircle(500, 500 * mBeacon, 100 * getScale(), paint);
-        }
-    }
-
-    //Custom Code
-    public void setBeacon(int num) {
-        mBeacon = num;
+    public float scale() {
+        return getScale();
     }
 
     @Override
