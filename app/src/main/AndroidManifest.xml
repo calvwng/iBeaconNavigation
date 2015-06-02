@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.seniorproject.ibeaconnavigation" >
+    package="com.seniorproject.ibeaconnavigation" > <!-- For AltBeacon library -->
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,26 +16,26 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <!-- For AltBeacon library -->
-    <uses-sdk
-        android:minSdkVersion="18"
-        android:targetSdkVersion="18" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        tools:replace="icon, label"
-        android:theme="@style/AppTheme" >
-
+        android:theme="@style/AppTheme"
+        tools:replace="icon, label" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,17 +53,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.seniorproject.ibeaconnavigation.MainActivity" />
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-
         <activity
             android:name=".RangingActivity"
             android:label="@string/title_activity_ranging" >
         </activity>
-
         <activity
             android:name=".FloorplanNavigationActivity"
             android:label="@string/title_floorplan_navigation" >
@@ -71,7 +72,16 @@
 
         <service
             android:name=".BuildingProximityService"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <activity
+            android:name=".RoomSearchActivity"
+            android:label="@string/title_activity_room_search"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.seniorproject.ibeaconnavigation.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

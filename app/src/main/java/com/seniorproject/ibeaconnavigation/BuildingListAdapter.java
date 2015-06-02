@@ -1,6 +1,7 @@
 package com.seniorproject.ibeaconnavigation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seniorproject.ibeaconnavigation.model.Building;
+import com.seniorproject.ibeaconnavigation.model.Room;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,7 +63,11 @@ public class BuildingListAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Selected Building " + building.toString(),
                                Toast.LENGTH_SHORT).show();
-                // TODO: launch fragment that lists rooms for selected building
+                // Launch room search/filter activity for selected buildling
+                Intent roomSearchIntent =
+                        new Intent(getContext(), RoomSearchActivity.class);
+                roomSearchIntent.putExtra(Building.TAG_BLDG_NUM, building.getNum());
+                getContext().startActivity(roomSearchIntent);
             }
         });
 

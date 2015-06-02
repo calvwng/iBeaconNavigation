@@ -7,5 +7,6 @@
     <string name="title_activity_map">Map</string>
     <string name="title_activity_ranging">RangingActivity</string>
     <string name="title_floorplan_navigation">Floorplan Navigation</string>
+    <string name="title_activity_room_search">RoomSearchActivity</string>
 
 </resources>

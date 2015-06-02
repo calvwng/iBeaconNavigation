@@ -1,12 +1,16 @@
 package com.seniorproject.ibeaconnavigation.model;
 
+import java.io.Serializable;
+
 /**
  * Model for a room, which should have an associated building and
  * Bluetooth beacon.
  *
  * Created by Calvin on 6/1/2015.
  */
-public class Room {
+public class Room implements Serializable {
+    private static final long serialVersionUID = 0x05231994;
+    private String name = "";
     private int num;
     private int bldgNum;
     private final String beaconAddr;
@@ -18,6 +22,13 @@ public class Room {
         this.num = roomNumber;
         this.bldgNum = bldgNum;
         this.beaconAddr = beaconAddr;
+    }
+
+    public Room(int roomNumber, int bldgNum, String beaconAddr, String name) {
+        this.num = roomNumber;
+        this.bldgNum = bldgNum;
+        this.beaconAddr = beaconAddr;
+        this.name = name;
     }
 
     public int getBldgNum() {
@@ -32,7 +43,12 @@ public class Room {
         return beaconAddr;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String toString() {
-        return Building.getBuilding(bldgNum).getNum() + "-" + getNum();
+        return String.format(
+                "%03d-%03d %s", Building.getBuilding(bldgNum).getNum(), getNum(), getName());
     }
 }
