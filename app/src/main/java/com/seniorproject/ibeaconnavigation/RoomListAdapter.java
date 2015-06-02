@@ -68,7 +68,7 @@ public class RoomListAdapter extends ArrayAdapter {
                 // Start custom MapActivity
                 Intent mapIntent = new Intent(getContext(), MapActivity.class);
                 mapIntent.putExtra(Room.TAG_BEACON_ADDR, room.getBeaconAddr());
-                mapIntent.putExtra(Room.TAG_LABEL, room.toString());
+                mapIntent.putExtra(Room.TAG_ROOM, room);
                 getContext().startActivity(mapIntent);
             }
         });

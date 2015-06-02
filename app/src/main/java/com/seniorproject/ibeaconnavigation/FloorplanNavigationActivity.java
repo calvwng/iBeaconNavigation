@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.matabii.dev.scaleimageview.ScaleImageView;
+import com.seniorproject.ibeaconnavigation.model.Room;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -39,15 +40,15 @@ import java.util.Comparator;
  *
  * Created by Calvin on 5/2/2015.
  */
-public class FloorplanNavigationActivity extends Activity implements BeaconConsumer {
+public class FloorplanNavigationActivity extends ActionBarActivity implements BeaconConsumer {
     private BeaconManager beaconManager;
     private ScaleImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String targetRoomLabel = getIntent().getExtras().getString("TARGET_ROOM_LABEL");
-        setTitle("Room " + targetRoomLabel);
+        Room targetRoom = (Room)getIntent().getSerializableExtra(Room.TAG_ROOM);
+        setTitle("Room " + targetRoom.toString());
         setContentView(R.layout.activity_floorplan_nav);
         imageView = (ScaleImageView) findViewById(R.id.imageView);
         beaconManager = BeaconManager.getInstanceForApplication(this);

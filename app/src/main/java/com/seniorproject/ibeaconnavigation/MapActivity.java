@@ -2,6 +2,7 @@ package com.seniorproject.ibeaconnavigation;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
+import com.seniorproject.ibeaconnavigation.model.Building;
 import com.seniorproject.ibeaconnavigation.model.Room;
 
 import android.app.Activity;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 
 public class MapActivity extends ActionBarActivity implements OnMapReadyCallback {
+    private Room targetRoom;
+    private Building bldg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +23,10 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
 
         final String beaconAddr = getIntent().getExtras().getString(Room.TAG_BEACON_ADDR);
-        final String roomLabel = getIntent().getExtras().getString(Room.TAG_LABEL);
-        setTitle("Room " + roomLabel);
+        final Room room = (Room)getIntent().getExtras().getSerializable(Room.TAG_ROOM);
+        targetRoom = room;
+        setTitle("Room " + room.toString());
+        bldg = Building.getBuilding(targetRoom.getBldgNum());
 
         // Retrieve the Google MapFragment
         MapFragment mapFragment = (MapFragment) getFragmentManager()
@@ -35,11 +40,11 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
                 // Launch background service to detect iBeacon
                 Intent bpService = new Intent(MapActivity.this, BuildingProximityService.class);
                 bpService.putExtra(Room.TAG_BEACON_ADDR, beaconAddr);
-                bpService.putExtra(Room.TAG_LABEL, roomLabel);
+                bpService.putExtra(Room.TAG_ROOM, room);
                 MapActivity.this.startService(bpService);
 
                 // Build Google Nav URI and launch Google MapsActivity with it
-                String queryDestination = "Frank+E.+Pilling,+San+Luis+Obispo,+CA";
+                String queryDestination = bldg.getX() + ", " + bldg.getY();
                 String queryMode = "&mode=w";
                 Uri gmapBuildingUri = Uri.parse("google.navigation:q=" + queryDestination + queryMode);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapBuildingUri);
@@ -53,14 +58,14 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap map) {
-        LatLng targetCoord = new LatLng(35.30019, -120.6623);
+        LatLng targetCoord = new LatLng(bldg.getX(), bldg.getY());
 
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(targetCoord, 13));
 
         Marker marker = map.addMarker(new MarkerOptions()
-            .title("Frank E. Pilling Computer Science")
-            .snippet("A hub of hands-on computational creativity and analysis.")
+            .title(bldg.getName())
+//            .snippet("A hub of hands-on computational creativity and analysis.")
             .position(targetCoord));
         marker.showInfoWindow();
     }

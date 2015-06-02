@@ -16,7 +16,7 @@ public class Room implements Serializable {
     private final String beaconAddr;
     // Tags for bundling intent extras
     public static String TAG_BEACON_ADDR = "BEACON_ADDRESS";
-    public static String TAG_LABEL = "TARGET_ROOM_LABEL";
+    public static String TAG_ROOM = "TARGET_ROOM";
 
     public Room(int roomNumber, int bldgNum, String beaconAddr) {
         this.num = roomNumber;

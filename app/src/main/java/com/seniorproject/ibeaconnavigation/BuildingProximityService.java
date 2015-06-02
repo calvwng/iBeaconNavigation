@@ -28,7 +28,7 @@ public class BuildingProximityService extends Service implements BeaconConsumer 
     protected static final String TAG = "cwong";
     private BeaconManager beaconManager;
     String beaconAddr; // Bluetooth address of the beacon corresponding to the target room
-    String targetRoomLabel;
+    Room targetRoom;
     boolean beaconFound = false; // So that beacon's handled once per detection, then service stops
 
 
@@ -55,7 +55,7 @@ public class BuildingProximityService extends Service implements BeaconConsumer 
     public int onStartCommand(Intent intent, int flags, int startId) {
         int result = super.onStartCommand(intent, flags, startId);
         beaconAddr = intent.getStringExtra(Room.TAG_BEACON_ADDR);
-        targetRoomLabel = intent.getStringExtra(Room.TAG_LABEL);
+        targetRoom = ((Room)intent.getSerializableExtra(Room.TAG_ROOM));
         return result;
     }
 
@@ -90,7 +90,7 @@ public class BuildingProximityService extends Service implements BeaconConsumer 
                             fpNavIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             String beaconAddress = beacons.iterator().next().getBluetoothAddress();
                             fpNavIntent.putExtra(Room.TAG_BEACON_ADDR, beaconAddress);
-                            fpNavIntent.putExtra(Room.TAG_LABEL, targetRoomLabel);
+                            fpNavIntent.putExtra(Room.TAG_ROOM, targetRoom);
                             getApplication().startActivity(fpNavIntent);
                             stopSelf();
                         }
