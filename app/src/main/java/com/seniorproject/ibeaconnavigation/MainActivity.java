@@ -13,6 +13,7 @@ import com.seniorproject.ibeaconnavigation.model.Room;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * MainActivity provides the tab navigation for the application.
@@ -22,21 +23,6 @@ public class MainActivity extends ActionBarActivity {
     private ListView buildingListView;
     private ListView favoritesListView;
     private SearchView searchView;
-
-    // Dummy data for buildings
-    private String[] buildings = {
-            "1 Administration",
-            "2 Cochett Education",
-            "3 Business",
-            "4 Research Development",
-            "5 Architecture & Environmental",
-            "14 Frank E. Pilling Computer Science"
-    };
-
-    // Dummy data for favorited rooms
-//    private String[] favRooms = {
-//            "14-201 (Frank E. Pilling)"
-//    };
 
     // Dummy data for favorited rooms
     private Room[] favRooms = {
@@ -61,8 +47,8 @@ public class MainActivity extends ActionBarActivity {
      */
     private void populateSearchList() {
         // Filling an ArrayList to allow new additions to ArrayAdapter
-        ArrayList buildingsList = new ArrayList(Arrays.asList(buildings));
-        BuildingListAdapter listAdapter = new BuildingListAdapter(this, buildingsList);
+        BuildingListAdapter listAdapter =
+                new BuildingListAdapter(this, new ArrayList<Building>(Building.getBuildings()));
         buildingListView.setAdapter(listAdapter);
     }
 
@@ -107,12 +93,15 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ArrayList<String> temp = new ArrayList<String>();
+                ArrayList<Building> temp = new ArrayList<Building>();
                 int queryLen = newText.length();
-                for (int i = 0; i < buildings.length; i++) {
-                    if (queryLen <= buildings[i].length()
-                            && buildings[i].toLowerCase().contains(newText.toLowerCase())) {
-                        temp.add(buildings[i]);
+                Collection<Building> buildings = Building.getBuildings();
+
+                for (Building building : buildings) {
+                    String bLabel = building.toString();
+                    if (queryLen <= bLabel.length()
+                            && bLabel.toLowerCase().contains(newText.toLowerCase())) {
+                        temp.add(building);
                     }
                 }
                 BuildingListAdapter listAdapter = new BuildingListAdapter(MainActivity.this, temp);

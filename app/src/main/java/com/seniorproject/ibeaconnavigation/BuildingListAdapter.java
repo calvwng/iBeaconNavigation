@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.seniorproject.ibeaconnavigation.model.Building;
+
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ public class BuildingListAdapter extends ArrayAdapter {
      * @param context
      * @param buildings
      */
-    public BuildingListAdapter(Context context, List buildings) {
+    public BuildingListAdapter(Context context, List<Building> buildings) {
         super(context, R.layout.simplerow, buildings);
         mContext = context;
         mBuildings = buildings;
@@ -48,15 +50,15 @@ public class BuildingListAdapter extends ArrayAdapter {
         }
 
         // Get corresponding building from list
-        final Object building = mBuildings.get(position);
+        final Building building = (Building)mBuildings.get(position);
 
         // Update corresponding building's Views
-        holder.name.setText((String)building);
+        holder.name.setText(building.toString());
         // Temporarily handles click events by displaying a Toast with building name
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Selected building " + (String)building,
+                Toast.makeText(getContext(), "Selected Building " + building.toString(),
                                Toast.LENGTH_SHORT).show();
                 // TODO: launch fragment that lists rooms for selected building
             }
