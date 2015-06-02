@@ -1,5 +1,6 @@
 package com.seniorproject.ibeaconnavigation.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -52,6 +53,10 @@ public class Building {
         return rooms.get(roomNum);
     }
 
+    public static Collection<Building> getBuildings() {
+        return bldgs.values();
+    }
+
     /**
      * Get a Building by its building number.
      * @param bldgNum
@@ -62,7 +67,6 @@ public class Building {
     }
 
     public String toString() {
-//        return "Building " + getNum() + ": " + getName();
         return getNum() + " " + getName();
     }
 }
