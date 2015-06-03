@@ -25,9 +25,11 @@ public class MainActivity extends ActionBarActivity {
     private SearchView searchView;
 
     // Dummy data for favorited rooms
-    private Room[] favRooms = {
-            Building.getBuilding(14).getRoom(201)
-    };
+    private ArrayList<Room> favRooms = new ArrayList<Room>(){{
+            this.add(Building.getBuilding(14).getRoom(201).setFavName("My favorite class!"));
+            this.add(Building.getBuilding(14).getRoom(212));
+            this.add(Building.getBuilding(3).getRoom(111).setFavName("This class is also the biz"));
+    }};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,7 @@ public class MainActivity extends ActionBarActivity {
     private void populateFavoritesList() {
         favoritesListView = (ListView)findViewById(R.id.listFavorites);
         // Filling an ArrayList to allow new additions to ArrayAdapter
-        ArrayList favList = new ArrayList(Arrays.asList(favRooms));
-        RoomListAdapter listAdapter = new RoomListAdapter(this, favList);
+        RoomListAdapter listAdapter = new RoomListAdapter(this, favRooms, true);
         favoritesListView.setAdapter(listAdapter);
     }
 

@@ -2,6 +2,8 @@ package com.seniorproject.ibeaconnavigation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,7 @@ public class BuildingListAdapter extends ArrayAdapter {
     protected List mBuildings;
 
     /**
-     * Constructor that temporarily takes in a String list of building names
+     * Constructor that takes in a list of Buildings
      * @param context
      * @param buildings
      */
@@ -63,6 +65,16 @@ public class BuildingListAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Selected Building " + building.toString(),
                                Toast.LENGTH_SHORT).show();
+                final TextView bldgTxtVw = (TextView)v;
+                final int oldTextColor = bldgTxtVw.getCurrentTextColor();
+                bldgTxtVw.setTextColor(Color.GREEN);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        bldgTxtVw.setTextColor(oldTextColor);
+                    }
+                }, 200);
+
                 // Launch room search/filter activity for selected buildling
                 Intent roomSearchIntent =
                         new Intent(getContext(), RoomSearchActivity.class);

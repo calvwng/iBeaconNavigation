@@ -2,7 +2,9 @@ package com.seniorproject.ibeaconnavigation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +24,10 @@ import java.util.List;
 public class RoomListAdapter extends ArrayAdapter {
     protected Context mContext;
     protected List mRooms;
+    private boolean isFavList = false;
 
     /**
-     * Constructor that temporarily takes in a String list of room names
+     * Constructor that takes in a list of Rooms
      * @param context
      * @param rooms
      */
@@ -32,6 +35,18 @@ public class RoomListAdapter extends ArrayAdapter {
         super(context, R.layout.simplerow, rooms);
         mContext = context;
         mRooms = rooms;
+    }
+
+    /**
+     * Constructor that takes in a list of Rooms & whether they are favorites
+     * @param context
+     * @param rooms
+     */
+    public RoomListAdapter(Context context, List<Room> rooms, boolean isFavList) {
+        super(context, R.layout.simplerow, rooms);
+        mContext = context;
+        mRooms = rooms;
+        this.isFavList = isFavList;
     }
 
     /**
@@ -56,13 +71,26 @@ public class RoomListAdapter extends ArrayAdapter {
         final Room room = (Room)mRooms.get(position);
 
         // Update corresponding room's Views
-        holder.name.setText(room.toString());
+        String roomText = room.toString();
+        if (isFavList && !room.toStringFav().isEmpty()) {
+            roomText = room.toStringFav();
+        }
+        holder.name.setText(roomText);
         // Temporarily handles click events by displaying a Toast with room name
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Selected room " + room.toString(),
                                Toast.LENGTH_SHORT).show();
+                final TextView roomTxtVw = (TextView)v;
+                final int oldTextColor = roomTxtVw.getCurrentTextColor();
+                roomTxtVw.setTextColor(Color.GREEN);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        roomTxtVw.setTextColor(oldTextColor);
+                    }
+                }, 200);
 
                 // launch Google Nav to building, then jump to our floorplan nav when beacon found
                 // Start custom MapActivity

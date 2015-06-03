@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class Room implements Serializable {
     private static final long serialVersionUID = 0x05231994;
     private String name = "";
+    private String favName = "";
     private int num;
     private int bldgNum;
     private final String beaconAddr;
@@ -47,8 +48,22 @@ public class Room implements Serializable {
         return name;
     }
 
+    public String getFavoriteName() {
+        return favName;
+    }
+
+    public Room setFavName(String newFavName) {
+        this.favName = newFavName;
+        return this;
+    }
+
     public String toString() {
         return String.format(
                 "%03d-%03d %s", Building.getBuilding(bldgNum).getNum(), getNum(), getName());
+    }
+
+    public String toStringFav() {
+        return String.format(
+                "%03d-%03d %s", Building.getBuilding(bldgNum).getNum(), getNum(), getFavoriteName());
     }
 }
